@@ -15,7 +15,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.openrocket.ork</string>
+				<string>info.openrocket.ork</string>
 			</array>
 		</dict>
 	</array>
@@ -29,7 +29,7 @@
 			<key>UTTypeDescription</key>
 			<string>Open Rocket Data File</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.openrocket.ork</string>
+			<string>info.openrocket.ork</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
