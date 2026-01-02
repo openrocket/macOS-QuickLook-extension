@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		DE22BCCF2EB80A90001CE801 /* OpenRocket QL Preview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DE22BCC02EB80A90001CE801 /* OpenRocket QL Preview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DE22BCD72EB80ADD001CE801 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = DE22BCD62EB80ADD001CE801 /* ZIPFoundation */; };
-		DE22BCF42EBAACBF001CE801 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = DE22BCF32EBAACBF001CE801 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,7 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE22BCF42EBAACBF001CE801 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

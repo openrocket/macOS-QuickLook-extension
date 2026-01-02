@@ -18,4 +18,6 @@ There is a command line script "runit" (shown on left). You need to set the thre
   ORIGINAL_DMG=... # "Path to the original .dmg"
   MODIFIED_DMG=... # where you want the updated DMG to go
 
-
+Finally, in Terminal:
+- cd to the Project directory (where "runit) is located
+- execute "./runit"

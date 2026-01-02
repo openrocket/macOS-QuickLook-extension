@@ -50,9 +50,6 @@ hdiutil resize -sectors $TOTAL /tmp/RW.dmg
 # mount the writeable .dmg, then copy the Resource (a dylib) and the Plugin
 hdiutil attach /tmp/RW.dmg
 
-cp -R "/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Resources/ZIPFoundation_ZIPFoundation.bundle" \
-   /Volumes/OpenRocket/OpenRocket.app/Contents/Resources
-
 cp -R "/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins" \
        /Volumes/OpenRocket/OpenRocket.app/Contents/
 
