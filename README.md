@@ -1,0 +1,21 @@
+Before running this project, select the Project file (top left), then
+for each target set the "Team" account in "Signing & Capacities", and
+the "Certificate" should be "Developer ID Application".
+
+Great reference for doing all this:
+    https://dennisbabkin.com/blog/?t=how-to-get-certificate-code-sign-notarize-macos-binaries-outside-apple-app-store
+
+Required:
+- create a "Developer ID Application" Certificate on developer.apple.com if you don't already have it.
+- create an App-Specific password for use with the notarization scripts (to avoid exposing your password in clear text)
+  see https://support.apple.com/en-us/102654,
+
+add the password to your keychain (see above URL) - this is what I did (my id, my team-id)
+  xcrun notarytool store-credentials "AppPwdNotarizID --apple-id "dhoerl@mac.com" --team-id 748Z47NBAH --password "<the app specific one>",
+
+There is a command line script "runit" (shown on left). You need to set the three variables:
+  KEYCHAIN_PROFILE=... # I named it "AppPwdNotarizID"
+  ORIGINAL_DMG=... # "Path to the original .dmg"
+  MODIFIED_DMG=... # where you want the updated DMG to go
+
+

@@ -1,0 +1,69 @@
+#! /bin/ksh
+
+KEYCHAIN_PROFILE="AppPwdNotarizID"
+ORIGINAL_DMG="/Users/dhoerl/Downloads/OpenRocket-24.12-installer-macOS-AppleSilicon.dmg"
+MODIFIED_DMG=/tmp/R.dmg
+
+rm -f /tmp/RW.dmg
+rm -f /tmp/RW.plist
+rm -f /tmp/QL_Preview.zip
+
+xcodebuild archive -quiet -target "OpenRocket QuickLook Preview" -configuration Release -scheme "OpenRocket QuickLook Preview" -archivePath /tmp/OpenRocket.xcarchive
+if [ $? -ne 0 ] ; then ; exit 1 ; fi
+echo "BUILD successful"
+
+APPEX="/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins/OpenRocket QL Preview.appex"
+ditto -c -k --sequesterRsrc --keepParent "$APPEX" /tmp/QL_Preview.zip
+if [ $? -ne 0 ] ; then ; exit 1 ; fi
+echo "COMPRESS SUCCESSFUL"
+
+xcrun notarytool submit /tmp/QL_Preview.zip --keychain-profile "AppPwdNotarizID" --wait
+if [ $? -ne 0 ] ; then ; exit 1 ; fi
+echo "NOTARY SUCCESS"
+
+xcrun -v stapler staple "$APPEX"
+if [ $? -ne 0 ] ; then ; exit 1 ; fi
+echo "STAPLER SUCCESS"
+
+# Now we have a codesigned and notarized plugin
+
+# need a writeable .dmg
+hdiutil convert -format UDRW -o /tmp/RW.dmg "$ORIGINAL_DMG" 
+
+# have to have a file, Plistbuddy wont work with stdin
+hdiutil imageinfo -plist /tmp/RW.dmg > /tmp/RW.plist
+#echo $(/usr/libexec/PlistBuddy -c 'print :Size\ Information:Sector\ Count:' /tmp/RW.plist)
+
+# Get the current number of sectors
+CURRENT=$(/usr/libexec/PlistBuddy -c 'print :Size\ Information:Sector\ Count:' /tmp/RW.plist)
+
+# need space for the plugin, 40000 works as of 1/1/2026
+TOTAL=$(expr $CURRENT + 40000) # n = 512 sectors to allow for new files
+
+rm /tmp/RW.plist
+
+#echo "CURRENT = $CURRENT"
+#echo "TOTAL = $TOTAL"
+
+hdiutil resize -sectors $TOTAL /tmp/RW.dmg
+
+# mount the writeable .dmg, then copy the Resource (a dylib) and the Plugin
+hdiutil attach /tmp/RW.dmg
+
+cp -R "/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Resources/ZIPFoundation_ZIPFoundation.bundle" \
+   /Volumes/OpenRocket/OpenRocket.app/Contents/Resources
+
+cp -R "/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins" \
+       /Volumes/OpenRocket/OpenRocket.app/Contents/
+
+hdiutil detach /Volumes/OpenRocket # unmount
+
+# create a new read-only dmg
+hdiutil convert -format UDRO -o "$MODIFIED_DMG" /tmp/RW.dmg
+
+# cleanup
+rm -f /tmp/RW.dmg
+#rm -f "$MODIFIED_DMG"  # testing
+
+echo "Finshed"
+
