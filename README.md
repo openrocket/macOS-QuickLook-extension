@@ -21,7 +21,7 @@ Because Install4j cannot build, sign, or notarize macOS QuickLook plugins, this 
 
 ## 1. Build the QuickLook Plugin (Xcode)
 
-**Where:** Xcode
+**Where:** Xcode or Terminal (see below)
 
 1. Open the Xcode project.
 2. Select the project (top-level entry in the navigator).
@@ -33,6 +33,23 @@ Because Install4j cannot build, sign, or notarize macOS QuickLook plugins, this 
 4. Build the target normally (`⌘B`).
 
 > No need to commit signing changes.
+
+**Where:** Terminal
+
+From the root dir:
+
+```sh
+xcodebuild -project "OpenRocket QuickLook Preview.xcodeproj" \
+  -target "OpenRocket QuickLook Preview" \
+  -scheme "OpenRocket QuickLook Preview" \
+  -configuration Release \
+  -derivedDataPath build/DerivedData \
+  build
+```
+
+Built app location:
+
+`build/DerivedData/Build/Products/Release/OpenRocket QuickLook Preview.app`
 
 ---
 
