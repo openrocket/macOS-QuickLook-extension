@@ -1,66 +1,89 @@
 #! /bin/ksh
 
+#KEYCHAIN_PROFILE  # The identifier for your app specific password as provided in the above xcrun for "store-credentials"
+#ORIGINAL_DMG      # the full path to the original DMG
+#MODIFIED_DMG      # the full path (and name) for the updated DMG to be located
+
 KEYCHAIN_PROFILE="AppPwdNotarizID"
 ORIGINAL_DMG="/Users/dhoerl/Downloads/OpenRocket-24.12-installer-macOS-AppleSilicon.dmg"
 MODIFIED_DMG=/tmp/R.dmg
 
+# remove any temporary files in case the last script didn't finish
 rm -f /tmp/RW.dmg
 rm -f /tmp/RW.plist
 rm -f /tmp/QL_Preview.zip
+rm -rf "$MODIFIED_DMG"
 
+# The following replicated lines tell the script to quit if something fails:
+#   if [ $? -ne 0 ] ; then ; exit 1 ; fi
+
+# Tell Xcode to build an App Archive for this project's APP using the "Release" configureation, and to output it here: "/tmp/OpenRocket.xcarchive"
 xcodebuild archive -quiet -target "OpenRocket QuickLook Preview" -configuration Release -scheme "OpenRocket QuickLook Preview" -archivePath /tmp/OpenRocket.xcarchive
 if [ $? -ne 0 ] ; then ; exit 1 ; fi
 echo "BUILD successful"
 
+# When Xcode creates a archive, it code signs the binaries using the Developer information entered in "Signing & Capacities",
+# but does not notarize it. To accomplish that, we need to first compress the extension, upload it to Apple and request notarization.
+# Once that succeeds, we then need to "staple" the original plugin. To the best of my knowledge, the command doing this
+# queries Apple to insure the plugin was notarized, and if so, gets some token that it then installs somewhere in plugin.
+
+# Zip (ie "compress") the original DMG so we can modify it. The ditto command replicates how Finder "compresses" a directory (which the appex is).
 APPEX="/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins/OpenRocket QL Preview.appex"
 ditto -c -k --sequesterRsrc --keepParent "$APPEX" /tmp/QL_Preview.zip
 if [ $? -ne 0 ] ; then ; exit 1 ; fi
 echo "COMPRESS SUCCESSFUL"
 
+# Request that Apple notarize the plugin zip. This can take a few minutes - the "wait" option tells the command to wait until it succeeds of fails.
 xcrun notarytool submit /tmp/QL_Preview.zip --keychain-profile "AppPwdNotarizID" --wait
 if [ $? -ne 0 ] ; then ; exit 1 ; fi
 echo "NOTARY SUCCESS"
 
+# Now that the notarization has succeeded, get the token from Apple and install it into the extension.
 xcrun -v stapler staple "$APPEX"
 if [ $? -ne 0 ] ; then ; exit 1 ; fi
 echo "STAPLER SUCCESS"
 
-# Now we have a codesigned and notarized plugin
+# Now we have a codesigned and notarized plugin, we need to create a writeable dmg to install the plugin into.
+hdiutil convert -format UDRW -o /tmp/RW.dmg "$ORIGINAL_DMG"
 
-# need a writeable .dmg
-hdiutil convert -format UDRW -o /tmp/RW.dmg "$ORIGINAL_DMG" 
+# The original dmg has no free space, so the writeable copy needs additional space to hold the plugin.
+# To accomplish that, we need to find out how many sectors are in the disk now, and expand it some
+# amount (which I determined by trial and error)
 
 # have to have a file, Plistbuddy wont work with stdin
+
+# query the original and get a Property List of its attributes
 hdiutil imageinfo -plist /tmp/RW.dmg > /tmp/RW.plist
-#echo $(/usr/libexec/PlistBuddy -c 'print :Size\ Information:Sector\ Count:' /tmp/RW.plist)
 
 # Get the current number of sectors
 CURRENT=$(/usr/libexec/PlistBuddy -c 'print :Size\ Information:Sector\ Count:' /tmp/RW.plist)
 
-# need space for the plugin, 40000 works as of 1/1/2026
+# need space for the plugin, so add 40000 sectors (works as of 1/1/2026)
 TOTAL=$(expr $CURRENT + 40000) # n = 512 sectors to allow for new files
 
 rm /tmp/RW.plist
 
+# debugging
 #echo "CURRENT = $CURRENT"
 #echo "TOTAL = $TOTAL"
 
+# now resize the new .dmg
 hdiutil resize -sectors $TOTAL /tmp/RW.dmg
 
-# mount the writeable .dmg, then copy the Resource (a dylib) and the Plugin
+# mount the writeable .dmg, then copy the Plugin (mounts as /Volumes/OpenRocket)
 hdiutil attach /tmp/RW.dmg
 
+# copy the plugin into the
 cp -R "/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins" \
        /Volumes/OpenRocket/OpenRocket.app/Contents/
 
+# the volume doesn't need to be mounted now - this probably causes the .dmg to actually be updated
 hdiutil detach /Volumes/OpenRocket # unmount
 
-# create a new read-only dmg
+# create a new read-only .dmg from the writable one
 hdiutil convert -format UDRO -o "$MODIFIED_DMG" /tmp/RW.dmg
 
 # cleanup
 rm -f /tmp/RW.dmg
-#rm -f "$MODIFIED_DMG"  # testing
 
 echo "Finshed"
-
