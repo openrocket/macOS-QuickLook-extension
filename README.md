@@ -39,12 +39,7 @@ Because Install4j cannot build, sign, or notarize macOS QuickLook plugins, this 
 From the root dir:
 
 ```sh
-xcodebuild -project "OpenRocket QuickLook Preview.xcodeproj" \
-  -target "OpenRocket QuickLook Preview" \
-  -scheme "OpenRocket QuickLook Preview" \
-  -configuration Release \
-  -derivedDataPath build/DerivedData \
-  build
+xcodebuild -target "OpenRocket QuickLook Preview" -configuration Release -scheme "OpenRocket QuickLook Preview"
 ```
 
 Built app location:
