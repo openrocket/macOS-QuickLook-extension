@@ -1,0 +1,6 @@
+# macOS-specific stuff
+**/.DS_Store
+
+# AI tools
+**/.claude
+**/CLAUDE.md
