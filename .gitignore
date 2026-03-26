@@ -1,6 +1,14 @@
 # macOS-specific stuff
 **/.DS_Store
 
+# Xcode user-specific data
+**/xcuserdata/
+
+# Xcode build artifacts
+build/
+DerivedData/
+*.xcarchive
+
 # AI tools
 **/.claude
 **/CLAUDE.md
