@@ -5,8 +5,8 @@
 #MODIFIED_DMG      # the full path (and name) for the updated DMG to be located
 
 KEYCHAIN_PROFILE="AppPwdNotarizID"
-ORIGINAL_DMG="/Users/dhoerl/Downloads/OpenRocket-24.12-installer-macOS-AppleSilicon.dmg"
-MODIFIED_DMG=/tmp/R.dmg
+ORIGINAL_DMG="<change to your path>/openrocket/install4j/26.xx/media/OpenRocket-26.xx-installer-macOS-AppleSilicon.dmg"
+MODIFIED_DMG="<change to your path>/openrocket/install4j/26.xx/media/OpenRocket-26.xx-installer-macOS-AppleSilicon-with-QL.dmg"
 
 # remove any temporary files in case the last script didn't finish
 rm -f /tmp/RW.dmg

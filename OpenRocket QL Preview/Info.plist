@@ -10,7 +10,7 @@
 			<false/>
 			<key>QLSupportedContentTypes</key>
 			<array>
-				<string>com.openrocket.ork</string>
+				<string>info.openrocket.ork</string>
 			</array>
 			<key>QLSupportsSearchableItems</key>
 			<false/>
