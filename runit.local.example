@@ -1,0 +1,6 @@
+# Copy this file to runit.local and fill in your values.
+# runit.local is gitignored and will not be committed.
+
+KEYCHAIN_PROFILE="AppPwdNotarizID"          # Keychain profile from xcrun notarytool store-credentials
+ORIGINAL_DMG="/path/to/install4j/OpenRocket.dmg"   # install4j output DMG
+MODIFIED_DMG="/path/to/output/OpenRocket-with-QL.dmg"  # Final output DMG

@@ -213,11 +213,17 @@ Open `OpenRocket QuickLook Preview.xcodeproj` in Xcode.
 
 ### 3. Configure the `runit` script
 
-Open the `runit` script and set the three variables at the top (lines 7-9):
+The `runit` script reads its configuration from a local file that is not tracked by git. Create it by copying the example:
+
+```bash
+cp runit.local.example runit.local
+```
+
+Then edit `runit.local` and fill in your paths:
 
 ```sh
-KEYCHAIN_PROFILE="AppPwdNotarizID"    # Keychain profile from store-credentials
-ORIGINAL_DMG="/path/to/install4j/OpenRocket.dmg"  # install4j output DMG
+KEYCHAIN_PROFILE="AppPwdNotarizID"          # Keychain profile from store-credentials
+ORIGINAL_DMG="/path/to/install4j/OpenRocket.dmg"   # install4j output DMG
 MODIFIED_DMG="/path/to/output/OpenRocket-with-QL.dmg"  # Final output DMG
 ```
 

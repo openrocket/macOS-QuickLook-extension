@@ -9,6 +9,9 @@ build/
 DerivedData/
 *.xcarchive
 
+# Local config (contains personal paths)
+runit.local
+
 # AI tools
 **/.claude
 **/CLAUDE.md
