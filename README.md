@@ -1,4 +1,4 @@
-# OpenRocket QuickLook Preview (macOS)
+# OpenRocket .ork QuickLook Preview (macOS)
 
 This project builds a QuickLook preview plugin for OpenRocket `.ork` files on macOS and integrates it into the existing install4j-generated OpenRocket DMG.
 
