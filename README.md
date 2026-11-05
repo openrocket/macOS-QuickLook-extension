@@ -1,21 +1,22 @@
 # OpenRocket .ork QuickLook Preview (macOS)
 
-This project builds a QuickLook preview plugin for OpenRocket `.ork` files on macOS and integrates it into the existing install4j-generated OpenRocket DMG.
+This project builds QuickLook preview and thumbnail plugins for OpenRocket `.ork` files on macOS and integrates it into the existing install4j-generated OpenRocket DMG.
 
-Because install4j cannot build, sign, or notarize macOS QuickLook extensions, this repository provides an external Xcode project and a helper script (`runit`) to build, sign, notarize, and inject the plugin into the final DMG.
+Because install4j cannot build, sign, or notarize macOS QuickLook extensions, this repository provides an external Xcode project and a helper script (`runit`) to build, sign, notarize, and inject the plugins into the final DMG.
 
 ---
 
 ## Architecture
 
-The project has two Xcode targets:
+The project has three Xcode targets:
 
 | Target | Output | Purpose |
 |--------|--------|---------|
 | **OpenRocket QuickLook Preview** | `.app` (host) | A minimal shell app that carries the QuickLook extension and declares the `.ork` UTI |
-| **OpenRocket QL Preview** | `.appex` (extension) | The actual QuickLook preview extension that renders `.ork` files |
+| **OpenRocket QL Preview** | `.appex` (extension) | The QuickLook preview extension (spacebar preview); shows `preview.png` from the `.ork` file |
+| **OpenRocket QL Thumbnail** | `.appex` (extension) | The QuickLook thumbnail extension (Finder icons); shows `thumbnail.png` from the `.ork` file, or `preview.png` for files saved by older OpenRocket versions |
 
-The `.appex` lives inside the host app at `OpenRocket QuickLook Preview.app/Contents/Plugins/OpenRocket QL Preview.appex`. During the merge step, the `Plugins/` folder is copied into the install4j-built `OpenRocket.app`.
+Both `.appex` bundles live inside the host app at `OpenRocket QuickLook Preview.app/Contents/Plugins/`. During the merge step, the `Plugins/` folder is copied into the install4j-built `OpenRocket.app`.
 
 ---
 
@@ -42,18 +43,18 @@ security find-identity -v -p codesigning | grep "Developer ID Application"
 
 ### 2. Register App IDs
 
-Go to **Certificates, Identifiers & Profiles** > **Identifiers** > click **+** to register a new App ID. Register two App IDs (one for the host app, one for the extension):
+Go to **Certificates, Identifiers & Profiles** > **Identifiers** > click **+** to register a new App ID. Register three App IDs (one for the host app, one for each extension):
 
-| Field | Host app | Extension |
-|-------|----------|-----------|
-| **Platform** | macOS | macOS |
-| **Description** | `OpenRocket QuickLook Preview` | `OpenRocket QL Preview Extension` |
-| **Bundle ID** | Select **Explicit**, enter `info.openrocket.ork` | Select **Explicit**, enter `info.openrocket.ork.qlpreview` |
-| **Capabilities** | Leave all unchecked | Leave all unchecked |
+| Field | Host app | Preview extension | Thumbnail extension |
+|-------|----------|-------------------|---------------------|
+| **Platform** | macOS | macOS | macOS |
+| **Description** | `OpenRocket QuickLook Preview` | `OpenRocket QL Preview Extension` | `OpenRocket QL Thumbnail Extension` |
+| **Bundle ID** | Select **Explicit**, enter `info.openrocket.ork` | Select **Explicit**, enter `info.openrocket.ork.qlpreview` | Select **Explicit**, enter `info.openrocket.ork.qlthumbnail` |
+| **Capabilities** | Leave all unchecked | Leave all unchecked | Leave all unchecked |
 
-No capabilities are needed for either App ID — just leave them all unchecked and click **Continue** > **Register**.
+No capabilities are needed for any of the App IDs — just leave them all unchecked and click **Continue** > **Register**.
 
-> The extension Bundle ID must be prefixed with the host app's Bundle ID (i.e. `info.openrocket.ork.qlpreview` starts with `info.openrocket.ork`). This is an Apple requirement for app extensions.
+> The extension Bundle IDs must be prefixed with the host app's Bundle ID (i.e. `info.openrocket.ork.qlpreview` and `info.openrocket.ork.qlthumbnail` start with `info.openrocket.ork`). This is an Apple requirement for app extensions.
 
 ### 3. App-Specific Password for Notarization
 
@@ -80,13 +81,15 @@ xcrun notarytool store-credentials "AppPwdNotarizID" \
 
 ## Info.plist Configuration
 
-There are two Info.plist files in this repo. Both already exist — you do **not** need to create them. They must stay in sync with each other.
+There are three Info.plist files in this repo. All already exist — you do **not** need to create them. They must stay in sync with each other.
 
 ```
 macOS-QuickLook-extension/
 ├── OpenRocket-QuickLook-Preview-Info.plist   <-- Host app Info.plist
-└── OpenRocket QL Preview/
-    └── Info.plist                             <-- Extension Info.plist
+├── OpenRocket QL Preview/
+│   └── Info.plist                             <-- Preview extension Info.plist
+└── OpenRocket QL Thumbnail/
+    └── Info.plist                             <-- Thumbnail extension Info.plist
 ```
 
 ### Host App: `OpenRocket-QuickLook-Preview-Info.plist` (repo root)
@@ -102,9 +105,13 @@ This is the Info.plist for the QuickLook extension target ("OpenRocket QL Previe
 
 - **`QLSupportedContentTypes`** — Lists `info.openrocket.ork` as the type this extension handles
 
+### Extension: `OpenRocket QL Thumbnail/Info.plist`
+
+This is the Info.plist for the QuickLook thumbnail extension target ("OpenRocket QL Thumbnail"), which provides the Finder icons of `.ork` files. Like the preview extension's Info.plist, it is included in the final product and lists `info.openrocket.ork` in **`QLSupportedContentTypes`**.
+
 ### Critical: UTIs must match
 
-The UTI string in the extension's `QLSupportedContentTypes` must **exactly match** the `UTTypeIdentifier` in the host app's `UTExportedTypeDeclarations`. Both must be `info.openrocket.ork`. A mismatch will cause QuickLook to silently ignore `.ork` files.
+The UTI string in each extension's `QLSupportedContentTypes` must **exactly match** the `UTTypeIdentifier` in the host app's `UTExportedTypeDeclarations`. Both must be `info.openrocket.ork`. A mismatch will cause QuickLook to silently ignore `.ork` files.
 
 You generally do not need to edit these files. They are already configured correctly in the repo.
 
@@ -185,8 +192,8 @@ The DMG that install4j produces will be modified by the `runit` script to includ
 
 ```
 1. install4j       --> Builds, signs, and notarizes OpenRocket.dmg
-2. Xcode / runit   --> Builds the QuickLook host app + extension
-3. runit            --> Notarizes and staples the .appex extension
+2. Xcode / runit   --> Builds the QuickLook host app + extensions
+3. runit            --> Notarizes and staples the .appex extensions
 4. runit            --> Injects the Plugins/ folder into the install4j DMG
 5. runit            --> Produces a new read-only DMG
 ```
@@ -200,14 +207,15 @@ Build the standard OpenRocket macOS DMG using install4j with code signing and no
 Open `OpenRocket QuickLook Preview.xcodeproj` in Xcode.
 
 1. In the left sidebar (Project Navigator), click the **project file** at the very top — the blue icon labeled **OpenRocket QuickLook Preview**. This opens the project editor.
-2. In the project editor's left column, look under **TARGETS**. You will see two targets:
+2. In the project editor's left column, look under **TARGETS**. You will see three targets:
    - **OpenRocket QuickLook Preview** (the host app)
-   - **OpenRocket QL Preview** (the extension)
+   - **OpenRocket QL Preview** (the preview extension)
+   - **OpenRocket QL Thumbnail** (the thumbnail extension)
 3. Click the first target (**OpenRocket QuickLook Preview**), then:
    - Select the **Signing & Capabilities** tab at the top of the editor
    - Set **Team** to your Apple Developer team
    - Set **Signing Certificate** to **Developer ID Application**
-4. Click the second target (**OpenRocket QL Preview**) and repeat the same signing settings.
+4. Click the other two targets (**OpenRocket QL Preview** and **OpenRocket QL Thumbnail**) and repeat the same signing settings.
 
 > You do not need to commit signing changes to git.
 
@@ -239,9 +247,9 @@ cd /path/to/macOS-QuickLook-extension
 The script performs these steps automatically:
 
 1. **Archive** the Xcode project (builds + code signs using Developer ID)
-2. **Compress** the `.appex` extension into a zip
-3. **Notarize** the zip with Apple (waits for completion)
-4. **Staple** the notarization ticket to the `.appex`
+2. **Compress** each `.appex` extension into a zip
+3. **Notarize** each zip with Apple (waits for completion)
+4. **Staple** the notarization ticket to each `.appex`
 5. **Convert** the install4j DMG to a writable format
 6. **Resize** the DMG to fit the additional plugin files
 7. **Copy** the `Plugins/` folder into `OpenRocket.app/Contents/`
@@ -272,6 +280,9 @@ Built app location: `build/DerivedData/Build/Products/Release/OpenRocket QuickLo
 # Preview a file directly
 qlmanage -p /path/to/file.ork
 
+# Generate a Finder thumbnail of a file (-x uses the QuickLook server, which runs the thumbnail extension)
+qlmanage -x -t -s 256 -o /tmp /path/to/file.ork
+
 # List registered QuickLook plugins
 qlmanage -m plugins
 
@@ -291,7 +302,7 @@ Open **Console.app** and filter for `quicklook` or `qlmanage` to see errors from
 | QuickLook shows nothing for `.ork` files | UTI mismatch between host and extension Info.plists | Ensure `QLSupportedContentTypes` matches `UTTypeIdentifier` exactly |
 | "not valid for use in process" error | Wrong signing certificate | Use **Developer ID Application**, not Apple Development |
 | Notarization fails | Missing/expired app-specific password | Regenerate at appleid.apple.com and re-run `store-credentials` |
-| Plugin not found after install | `Plugins/` folder not in the right location | Verify `OpenRocket.app/Contents/Plugins/OpenRocket QL Preview.appex` exists |
+| Plugin not found after install | `Plugins/` folder not in the right location | Verify `OpenRocket.app/Contents/Plugins/OpenRocket QL Preview.appex` and `OpenRocket QL Thumbnail.appex` exist |
 | Gatekeeper blocks the DMG | Final DMG not notarized | The `.appex` is notarized by the script; the DMG inherits notarization from install4j. If modified DMG is blocked, notarize it separately (see below) |
 
 ### Notarizing the final DMG (if needed)
@@ -308,7 +319,7 @@ xcrun stapler staple /path/to/modified.dmg
 ## Summary
 
 - **install4j** builds and notarizes the main OpenRocket Java app as a DMG
-- **Xcode** builds the QuickLook host app (which contains the `.appex` extension)
-- **`runit`** bridges the gap: it signs, notarizes, and merges the extension into the install4j DMG
+- **Xcode** builds the QuickLook host app (which contains the `.appex` extensions)
+- **`runit`** bridges the gap: it signs, notarizes, and merges the extensions into the install4j DMG
 - The install4j app's `Info.plist` must declare the `info.openrocket.ork` UTI so macOS associates `.ork` files with the app
-- The final result is a Gatekeeper-clean DMG with a working QuickLook preview for `.ork` files
+- The final result is a Gatekeeper-clean DMG with working QuickLook previews and Finder thumbnails for `.ork` files

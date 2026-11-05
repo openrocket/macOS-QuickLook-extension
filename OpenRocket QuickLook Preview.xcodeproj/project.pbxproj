@@ -10,6 +10,8 @@
 		D1A222B02F0DCEB100DBC4F6 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = DE22BCF32EBAACBF001CE801 /* ZIPFoundation */; };
 		DE22BCCF2EB80A90001CE801 /* OpenRocket QL Preview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DE22BCC02EB80A90001CE801 /* OpenRocket QL Preview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DE22BCD72EB80ADD001CE801 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = DE22BCD62EB80ADD001CE801 /* ZIPFoundation */; };
+		A7F300010000000000000002 /* OpenRocket QL Thumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A7F300010000000000000001 /* OpenRocket QL Thumbnail.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A7F300010000000000000003 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = A7F300010000000000000004 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,6 +21,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DE22BCBF2EB80A90001CE801;
 			remoteInfo = "OpenRocket QL Preview";
+		};
+		A7F300010000000000000005 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE22BCA32EB80A59001CE801 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A7F30001000000000000000C;
+			remoteInfo = "OpenRocket QL Thumbnail";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -30,6 +39,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				DE22BCCF2EB80A90001CE801 /* OpenRocket QL Preview.appex in Embed Foundation Extensions */,
+				A7F300010000000000000002 /* OpenRocket QL Thumbnail.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -41,6 +51,7 @@
 		DE22BCC02EB80A90001CE801 /* OpenRocket QL Preview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OpenRocket QL Preview.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE672E4C2F07478A004455FD /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		DE672E4D2F0749B2004455FD /* runit */ = {isa = PBXFileReference; lastKnownFileType = text; path = runit; sourceTree = "<group>"; };
+		A7F300010000000000000001 /* OpenRocket QL Thumbnail.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "OpenRocket QL Thumbnail.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,6 +61,13 @@
 				Info.plist,
 			);
 			target = DE22BCBF2EB80A90001CE801 /* OpenRocket QL Preview */;
+		};
+		A7F300010000000000000007 /* Exceptions for "OpenRocket QL Thumbnail" folder in "OpenRocket QL Thumbnail" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A7F30001000000000000000C /* OpenRocket QL Thumbnail */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -65,6 +83,14 @@
 				DE22BCD02EB80A90001CE801 /* Exceptions for "OpenRocket QL Preview" folder in "OpenRocket QL Preview" target */,
 			);
 			path = "OpenRocket QL Preview";
+			sourceTree = "<group>";
+		};
+		A7F300010000000000000008 /* OpenRocket QL Thumbnail */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A7F300010000000000000007 /* Exceptions for "OpenRocket QL Thumbnail" folder in "OpenRocket QL Thumbnail" target */,
+			);
+			path = "OpenRocket QL Thumbnail";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -86,6 +112,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A7F300010000000000000009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7F300010000000000000003 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -96,6 +130,7 @@
 				DE672E4D2F0749B2004455FD /* runit */,
 				DE22BCAD2EB80A59001CE801 /* OpenRocket QuickLook Preview */,
 				DE22BCC42EB80A90001CE801 /* OpenRocket QL Preview */,
+				A7F300010000000000000008 /* OpenRocket QL Thumbnail */,
 				DE22BCAC2EB80A59001CE801 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -105,6 +140,7 @@
 			children = (
 				DE22BCAB2EB80A59001CE801 /* OpenRocket QuickLook Preview.app */,
 				DE22BCC02EB80A90001CE801 /* OpenRocket QL Preview.appex */,
+				A7F300010000000000000001 /* OpenRocket QL Thumbnail.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,6 +161,7 @@
 			);
 			dependencies = (
 				DE22BCCE2EB80A90001CE801 /* PBXTargetDependency */,
+				A7F300010000000000000006 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				DE22BCAD2EB80A59001CE801 /* OpenRocket QuickLook Preview */,
@@ -160,6 +197,29 @@
 			productReference = DE22BCC02EB80A90001CE801 /* OpenRocket QL Preview.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		A7F30001000000000000000C /* OpenRocket QL Thumbnail */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A7F30001000000000000000D /* Build configuration list for PBXNativeTarget "OpenRocket QL Thumbnail" */;
+			buildPhases = (
+				A7F30001000000000000000A /* Sources */,
+				A7F300010000000000000009 /* Frameworks */,
+				A7F30001000000000000000B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A7F300010000000000000008 /* OpenRocket QL Thumbnail */,
+			);
+			name = "OpenRocket QL Thumbnail";
+			packageProductDependencies = (
+				A7F300010000000000000004 /* ZIPFoundation */,
+			);
+			productName = "OpenRocket QL Thumbnail";
+			productReference = A7F300010000000000000001 /* OpenRocket QL Thumbnail.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -174,6 +234,9 @@
 						CreatedOnToolsVersion = 26.0;
 					};
 					DE22BCBF2EB80A90001CE801 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					A7F30001000000000000000C = {
 						CreatedOnToolsVersion = 26.0;
 					};
 				};
@@ -197,6 +260,7 @@
 			targets = (
 				DE22BCAA2EB80A59001CE801 /* OpenRocket QuickLook Preview */,
 				DE22BCBF2EB80A90001CE801 /* OpenRocket QL Preview */,
+				A7F30001000000000000000C /* OpenRocket QL Thumbnail */,
 			);
 		};
 /* End PBXProject section */
@@ -210,6 +274,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DE22BCBE2EB80A90001CE801 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A7F30001000000000000000B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -233,6 +304,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A7F30001000000000000000A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -240,6 +318,11 @@
 			isa = PBXTargetDependency;
 			target = DE22BCBF2EB80A90001CE801 /* OpenRocket QL Preview */;
 			targetProxy = DE22BCCD2EB80A90001CE801 /* PBXContainerItemProxy */;
+		};
+		A7F300010000000000000006 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A7F30001000000000000000C /* OpenRocket QL Thumbnail */;
+			targetProxy = A7F300010000000000000005 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -522,6 +605,78 @@
 			};
 			name = Release;
 		};
+		A7F30001000000000000000E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 5BP83H9X52;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "OpenRocket QL Thumbnail/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "OpenRocket QL Thumbnail";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.openrocket.ork.qlthumbnail;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A7F30001000000000000000F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 5BP83H9X52;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "OpenRocket QL Thumbnail/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "OpenRocket QL Thumbnail";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.openrocket.ork.qlthumbnail;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -552,6 +707,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A7F30001000000000000000D /* Build configuration list for PBXNativeTarget "OpenRocket QL Thumbnail" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7F30001000000000000000E /* Debug */,
+				A7F30001000000000000000F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -572,6 +736,11 @@
 			productName = ZIPFoundation;
 		};
 		DE22BCF32EBAACBF001CE801 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE22BCD52EB80ADD001CE801 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+		A7F300010000000000000004 /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DE22BCD52EB80ADD001CE801 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
