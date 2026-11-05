@@ -28,21 +28,27 @@ echo "BUILD successful"
 # Once that succeeds, we then need to "staple" the original plugin. To the best of my knowledge, the command doing this
 # queries Apple to insure the plugin was notarized, and if so, gets some token that it then installs somewhere in plugin.
 
-# Zip (ie "compress") the original DMG so we can modify it. The ditto command replicates how Finder "compresses" a directory (which the appex is).
-APPEX="/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins/OpenRocket QL Preview.appex"
-ditto -c -k --sequesterRsrc --keepParent "$APPEX" /tmp/QL_Preview.zip
-if [ $? -ne 0 ] ; then ; exit 1 ; fi
-echo "COMPRESS SUCCESSFUL"
+# Each extension (the preview and the thumbnail extension) is notarized and stapled separately.
+for APPEX in "/tmp/OpenRocket.xcarchive/Products/Applications/OpenRocket QuickLook Preview.app/Contents/Plugins/"*.appex ; do
+    echo "Notarizing $APPEX"
+    rm -f /tmp/QL_Preview.zip
 
-# Request that Apple notarize the plugin zip. This can take a few minutes - the "wait" option tells the command to wait until it succeeds of fails.
-xcrun notarytool submit /tmp/QL_Preview.zip --keychain-profile "AppPwdNotarizID" --wait
-if [ $? -ne 0 ] ; then ; exit 1 ; fi
-echo "NOTARY SUCCESS"
+    # Zip (ie "compress") the extension so it can be uploaded. The ditto command replicates how Finder "compresses" a directory (which the appex is).
+    ditto -c -k --sequesterRsrc --keepParent "$APPEX" /tmp/QL_Preview.zip
+    if [ $? -ne 0 ] ; then ; exit 1 ; fi
+    echo "COMPRESS SUCCESSFUL"
 
-# Now that the notarization has succeeded, get the token from Apple and install it into the extension.
-xcrun -v stapler staple "$APPEX"
-if [ $? -ne 0 ] ; then ; exit 1 ; fi
-echo "STAPLER SUCCESS"
+    # Request that Apple notarize the plugin zip. This can take a few minutes - the "wait" option tells the command to wait until it succeeds of fails.
+    xcrun notarytool submit /tmp/QL_Preview.zip --keychain-profile "AppPwdNotarizID" --wait
+    if [ $? -ne 0 ] ; then ; exit 1 ; fi
+    echo "NOTARY SUCCESS"
+
+    # Now that the notarization has succeeded, get the token from Apple and install it into the extension.
+    xcrun -v stapler staple "$APPEX"
+    if [ $? -ne 0 ] ; then ; exit 1 ; fi
+    echo "STAPLER SUCCESS"
+done
+rm -f /tmp/QL_Preview.zip
 
 # Now we have a codesigned and notarized plugin, we need to create a writeable dmg to install the plugin into.
 hdiutil convert -format UDRW -o /tmp/RW.dmg "$ORIGINAL_DMG"
